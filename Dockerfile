@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN mvn clean package -Xe
+RUN mvn package -Xe
 
 FROM openjdk:11-jre
 
