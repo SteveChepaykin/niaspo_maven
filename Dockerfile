@@ -1,13 +1,12 @@
-FROM maven:3.9.8-eclipse-temurin-21 AS build
+FROM maven:3.8.6-openjdk-11 AS build
 
-WORKDIR /app
+COPY . /usr/src/app
+WORKDIR /usr/src/app
 
-COPY . .
+RUN mvn clean package
 
-RUN mvn package -Xe
+FROM openjdk:11-jre-slim
 
-FROM openjdk:11-jre
+COPY --from=build /usr/src/app/target/docker_maven-1.0-SNAPSHOT.jar app.jar
 
-COPY --from=build /app/target/my-app-1.0-SNAPSHOT.jar my-app.jar
-
-ENTRYPOINT ["java", "-jar", "/my-app.jar"]
+ENTRYPOINT ["java","-jar","/app.jar"]
